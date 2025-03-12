@@ -1,0 +1,78 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.btnGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btnGroup button {
+    flex: 1;
+    text-align: center;
+}
+
+
+.auth-container {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    padding: var(--padding-lg);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    margin: 1rem;
+}
+
+.btn-link {
+    color: var(--button-bg);
+    font-style: italic;
+    background-color: var(--secondary-bg);
+}
+
+
+/* Stilizare generală pentru dropdown */
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid var(--button-bg);
+    border-radius: var(--border-radius);
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Stil pentru opțiunile dropdown */
+select option {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    padding: 0.5rem;
+}
+
+/* Stil pentru hover și focus pe dropdown */
+select:hover, select:focus {
+    border-color: var(--primary-bg);
+    outline: none;
+}
+
+/* Stilizare etichetă pentru dropdown */
+label[for="role"] {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+

@@ -1,0 +1,55 @@
+<div class="home-container">
+    <div class="title">
+        <h1>Welcome to Our E-Learning Platform!</h1>
+    </div>
+
+
+    <!-- ✅ Guest Message -->
+    <div *ngIf="!isAuthenticated" class="guest-message">
+        <div class="msg-format">
+            <img src="startup.png" alt="Startup">
+            <p>Unlock your learning potential! Log in to access exclusive courses, track progress, and learn from top
+                educators.</p>
+        </div>
+
+        <button class="login" (click)="navigateToLogin()">Login Now</button>
+    </div>
+
+    <!-- ✅ Professor Message -->
+    <div *ngIf="isProfessor" class="professor-message">
+        <h2>Welcome, Professor!</h2>
+        <div class="msg-format">
+            <img src="academic.png" alt="Professor">
+            <p>Share your knowledge by creating courses for students eager to learn.</p>
+        </div>
+        <button class="new-course" (click)="navigateToCreateCourse()">Create a New Course</button>
+    </div>
+    <div *ngIf="isStudent" class="student-motivation">
+        <h2>Your Enrolled Courses </h2> <img src="stack-of-books.png" alt="Books">
+    </div>
+    <div *ngIf="isStudent" class="student-message">
+
+        <!-- ✅ Enrolled Courses Section -->
+        <div *ngIf="enrolledCourses.length > 0" class="enrolled-courses">
+            <div class="enrolled-courses-container">
+                <ul class="enrolled-courses">
+                    <li *ngFor="let course of enrolledCourses">
+                        <div class="course-title"><strong>{{ course.name }}</strong></div>
+                        <div class="course-domain">Domain: {{ course.domain }}</div>
+                        <div class="course-period">Period: {{ course.period }}</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <button class="btn btn-primary" (click)="navigateToCourses()">Browse More Courses</button>
+        <!-- ✅ No Courses Enrolled -->
+        <div *ngIf="enrolledCourses.length === 0" class="no-courses">
+            <div class="no-courses">
+                <img src="alert.png" alt="Alert">
+                <p>You are not enrolled in any courses yet. Browse available courses and start learning today!</p>
+            </div>
+        </div>
+
+    </div>
+</div>

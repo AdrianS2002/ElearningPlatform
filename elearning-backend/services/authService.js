@@ -7,15 +7,31 @@ class AuthService {
     // LOGIN
     async login(email, password) {
         const user = await userRepository.findByEmail(email);
-        console.log("User found:", user);
-        console.log("Password entered:", password);
-        console.log("Stored password (hashed):", user.password);
 
-        if (!user || !(await user.validPassword(password))) {
-            throw new Error("Invalid credentials");
+        // ✅ Step 1: Check if user exists before accessing its properties
+        if (!user) {
+            console.log("❌ Login failed: User not found.");
+            throw new Error("User not found. Please check your email or sign up.");
         }
 
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        console.log("✅ User found:", user.email);
+        console.log("🔹 Password entered:", password);
+        console.log("🔹 Stored password (hashed):", user.password);
+
+        // ✅ Step 2: Verify password
+        if (!(await user.validPassword(password))) {
+            console.log("❌ Invalid Credentials: Incorrect password.");
+            throw new Error("Incorrect password. Please try again.");
+        }
+
+        // ✅ Step 3: Generate JWT Token
+        const token = jwt.sign(
+            { userId: user._id, role: user.role }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "1h" }
+        );
+
+        console.log("✅ Login successful! Token generated.");
 
         return { token, user };
     }
@@ -27,10 +43,12 @@ class AuthService {
             throw new Error("Email already in use");
         }
 
-        // NU hash-uim parola aici, lăsăm `User.js` să facă hash-ul
         const newUser = await userRepository.create(userData);
-
-        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign(
+            { userId: newUser._id, role: newUser.role }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "1h" }
+        );
 
         return { token, user: newUser };
     }
@@ -40,15 +58,13 @@ class AuthService {
         if (!token) {
             throw new Error("Token is required for logout");
         }
-        blacklistedTokens.add(token); // Stocăm token-ul invalidat
+        blacklistedTokens.add(token);
         return { message: "Logout successful" };
     }
 
-    // Verifică dacă un token este invalid
     isTokenBlacklisted(token) {
         return blacklistedTokens.has(token);
     }
-
 }
 
 module.exports = new AuthService();

@@ -39,11 +39,13 @@ export class SignupComponent {
 
     this.authService.signup(userData).subscribe({
       next: () => {
+        
         this.successMessage = 'Signup successful! Redirecting to login...';
-        this.isLoading = false;
+        
         setTimeout(() => {
           this.router.navigate(['/login']); // 👈 Redirecționează către Login după înregistrare
         }, 2000);
+        this.isLoading = false;
       },
       error: (err) => {
         this.errorMessage = err.error.error || 'Signup failed!';

@@ -1,0 +1,123 @@
+<div class="courses">
+    <h2>Courses-Discount</h2>
+
+    @if(successMessage){
+    <div class="success-message">
+        {{ successMessage }}
+    </div>
+
+    }
+
+    @if(errorMessage){
+    <div class="error-message">
+        {{ errorMessage }}
+    </div>
+    }
+
+    <div *ngIf="!isAuthenticated" class="courseBox grid-special">
+        <div *ngFor="let course of courses" class="course-card special-card" (click)="goToLogin()">
+            <div class="course-header">
+                <h3>{{ course.name }}</h3>
+                <p>{{ course.description }}</p>
+            </div>
+            <div class="course-info">
+                <div>
+                    <p><strong>Domain:</strong> {{ course.domain }}</p>
+                    <p><strong>Start Date:</strong> {{ course.start_date }}</p>
+                    <p><strong>End Date:</strong> {{ course.end_date }}</p>
+
+                </div>
+                <div>
+                    <p><strong>No. Lectures:</strong> {{ course.no_session }}</p>
+                    <p><strong>Slots:</strong> {{ course.slots }}</p>
+                    <p><strong>Available Slots:</strong> {{ course.available_slots }}</p>
+
+                </div>
+                <div>
+                    <p *ngIf="course.discount > 0">
+                        <strong>Price:</strong> 
+                        <span class="old-price">${{ course.price }}</span> 
+                        <span class="new-price">${{ (course.price * (1 - course.discount / 100)).toFixed(2) }}</span>
+                    </p>
+                    <p *ngIf="course.discount === 0">
+                        <strong>Price:</strong> ${{ course.price }}
+                    </p>
+                    <p><strong>Languages:</strong>{{course.languages}}</p>
+                    <p><strong>Discount:</strong> {{ course.discount }}%</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div *ngIf="isAuthenticated" class="courseBox">
+         <!-- ✅ Secțiunea fixată cu butonul de Filter -->
+         <div class="filter-container">
+            <button *ngIf="isStundent" (click)="toggleFilterPopup()" class="filter">Filter</button>
+        </div>
+
+        <!-- ✅ Popup-ul pentru filtrare -->
+        <div *ngIf="showFilter" class="filter-overlay">
+            <app-filter (applyFilter)="applyCourseFilter($event)" (close)="showFilter = false"></app-filter>
+        </div>
+
+        <!-- ✅ Afișează mesaj dacă nu există cursuri după filtrare -->
+        <div *ngIf="courses.length === 0" class="no-courses">
+            <p>No courses found.</p>
+        </div>
+
+        <div *ngFor="let course of courses" class="course-card" [class.disabled-course]="course.available_slots === 0">
+            <div class="course-header">
+                <h3>{{ course.name }}</h3>
+                <p>{{ course.description }}</p>
+            </div>
+            <div class="course-info">
+                <div>
+                    <p><strong>Domain:</strong> {{ course.domain }}</p>
+                    <p><strong>Start Date:</strong> {{ course.start_date }}</p>
+                    <p><strong>End Date:</strong> {{ course.end_date }}</p>
+                </div>
+                <div>
+                    <p><strong>No. Lectures:</strong> {{ course.no_session }}</p>
+                    <p><strong>Slots:</strong> {{ course.slots }}</p>
+                    <p><strong>Available Slots:</strong> {{ course.available_slots }}</p>
+                </div>
+                <div>
+                    <p *ngIf="course.discount > 0">
+                        <strong>Price:</strong>
+                        <span class="old-price">${{ course.price }}</span>
+                        <span class="new-price">${{ (course.price * (1 - course.discount / 100)).toFixed(2) }}</span>
+                    </p>
+                    <p *ngIf="course.discount === 0">
+                        <strong>Price:</strong> ${{ course.price }}
+                    </p>
+                    <p><strong>Languages:</strong> {{ course.languages }}</p>
+                    <p><strong>Discount:</strong> {{ course.discount }}%</p>
+                </div>
+            </div>
+        
+            <div class="course-actions">
+                <!-- ✅ Butonul Enroll devine dezactivat dacă nu mai sunt locuri disponibile -->
+                <button *ngIf="isStundent" (click)="enroll(course._id)" class="enroll" [disabled]="course.available_slots === 0">
+                    Enroll
+                </button>
+        
+                <!-- ✅ Butonul Unenroll rămâne activ mereu -->
+                <button *ngIf="isStundent" (click)="unenroll(course._id)" class="unenroll">
+                    Unenroll
+                </button>
+        
+                <button *ngIf="isProfessor" (click)="editCourse(course._id)" class="btn btn-primary">
+                    <img src="edit.png" alt="Edit" />
+                </button>
+                <button *ngIf="isProfessor" (click)="deleteCourse(course._id)" class="btn btn-danger">
+                    <img src="delete.png" alt="Delete" />
+                </button>
+                <button *ngIf="isProfessor" (click)="stats(course._id)" class="btn btn-secondary">
+                    <img src="stats.png" alt="Stats" />
+                </button>
+            </div>
+        </div>
+    <button *ngIf="isProfessor" (click)="addCourse()" class="add-course-btn">ADD NEW COURSE</button>
+</div>

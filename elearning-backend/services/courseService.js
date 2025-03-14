@@ -20,6 +20,8 @@ class CourseService {
         if (professor.role !== "PROFESOR") {
             throw new Error("Only professors can create courses!");
         }
+        courseData.available_slots = courseData.slots;
+
        // courseData.user_id = professor._id;
         const newCourse = await courseRepository.create(courseData);
         await usersCourseRepository.create({
@@ -51,6 +53,11 @@ class CourseService {
         if (course.user_id._id.toString() !== userId.toString()) {
             console.log(`❌ Unauthorized: Course owner is ${course.user_id}, but request came from ${userId}`);
             throw new Error("You can only edit your own courses!");
+        }
+
+        if (courseData.slots !== undefined && courseData.slots !== course.slots) {
+            const difference = courseData.slots - course.slots;
+            courseData.available_slots = course.available_slots + difference;
         }
     
         console.log("✅ Course update authorized. Proceeding...");

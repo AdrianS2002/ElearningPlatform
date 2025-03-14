@@ -4,19 +4,38 @@
     </div>
 
     <nav class="nav">
-        <a (click)="navigateToHome()"class="nav-item">Home</a>
+        <a (click)="navigateToHome()" class="nav-item">Home</a>
         <div class="dropdown">
             <button class="nav-item dropdown-btn">Courses ▼</button>
             <div class="dropdown-content">
                 <a (click)="navigateToCourses()" class="dropdown-item">Courses</a>
-                <a (click)="navigateToCourses()" class="dropdown-item">Offers</a>
+                <a (click)="navigateToOffers()" class="dropdown-item">Offers</a>
             </div>
         </div>
 
         <a (click)="navigateToContact()" class="nav-item">Contact</a>
+
+        <!-- ✅ Bara de căutare cu dropdown -->
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search Courses">
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Search Courses" 
+                   [(ngModel)]="searchQuery" 
+                   (input)="searchCourses()"
+                   (focus)="showDropdown = true"
+                   (blur)="hideDropdownWithDelay()">
+
+            <!-- ✅ Dropdown pentru sugestii -->
+            <div class="search-dropdown" *ngIf="showDropdown && filteredCourses.length > 0">
+                <ul>
+                    <li *ngFor="let course of filteredCourses" 
+                        (click)="selectCourse(course)">
+                        {{ course.name }} ({{ course.languages }})
+                    </li>
+                </ul>
+            </div>
         </div>
+
         <div class="auth-buttons" *ngIf="isLoggedIn; else loggedOutTemplate">
             <button class="logout-btn" (click)="logout()">Logout</button>
         </div>
@@ -27,10 +46,5 @@
                 <button class="btn-signup" (click)="navigateToSignup()">Signup</button>
             </div>
         </ng-template>
-
-        
-
     </nav>
-
-   
 </header>

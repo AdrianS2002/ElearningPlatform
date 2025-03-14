@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -51,10 +51,18 @@ export class CourseService {
   }
 
   enrollStudent(courseId: string, studentId: string): Observable<any> {
+    console.log(`🔹 Enrolling Student: ${studentId} in Course: ${courseId}`);
+
     return this.http.post(
       this.enrollmentsUrl,
       { courses_id: courseId, student_id: studentId },
       { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(response => console.log("✅ Enrollment Response:", response)), // ✅ Log response
+      catchError(error => {
+        console.error("❌ Enrollment Error:", error);
+        return throwError(() => new Error(error.error?.error || "Enrollment failed!"));
+      })
     );
   }
   unenrollStudent(courseId: string, studentId: string): Observable<any> {

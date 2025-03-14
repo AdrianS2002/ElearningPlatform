@@ -6,6 +6,10 @@ import { CoursesComponent } from './courses/courses.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './auth.guard';
 import { AddEditCoursesComponent } from './courses/add-edit-courses/add-edit-courses.component';
+import { FilterComponent } from './filter/filter.component';
+import { OffersComponent } from './courses/offers/offers.component';
+import { CourseDetailComponent } from './courses/course-detail/course-detail.component';
+import { ChatbotComponent } from './chat-bot/chat-bot.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -17,4 +21,8 @@ export const routes: Routes = [
     { path: 'courses', component: CoursesComponent },
     { path: 'add-course', component:  AddEditCoursesComponent},
     { path: 'edit-course/:id', component: AddEditCoursesComponent },
+    { path: 'filter', component: FilterComponent},
+    { path: 'offers', component: OffersComponent},
+    { path: 'course/:id', component: CourseDetailComponent },
+    { path: 'chatbot', component: ChatbotComponent }
 ];

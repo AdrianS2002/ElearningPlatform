@@ -44,11 +44,16 @@ h1,h2{
     justify-content: center;
 }
 .student-motivation {
+    font-size: 15px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     width: 100%; 
     margin-bottom: 6rem;
 
+}
+.student-motivation .price{
+    color: green;
 }
 
 .student-motivation img{
@@ -161,6 +166,26 @@ button{
     flex-direction: row;
     align-items: center;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-bg);
+    padding: var(--padding-md);
+    text-align: center;
+    color: var(--text-color);
+}
+.robot {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
 
 .msg-format{
     display: flex;

@@ -25,6 +25,11 @@ class EnrollRepository {
     async deleteEnrollment(courseId, studentId) {
         return await Enroll.findOneAndDelete({ courses_id: courseId, student_id: studentId });
     }
+
+    async findByStudentAndCourse(studentId, courseId) {
+        return await Enroll.findOne({ student_id: studentId, courses_id: courseId });
+    }
+    
     
     
 

@@ -5,13 +5,15 @@ import { AuthService } from '../services/auth.service';
 import { routes } from '../app.routes';
 import { HomeComponent } from '../home/home.component';
 import { Router } from '@angular/router';
+import { GeolocComponent } from '../geoloc/geoloc.component';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [NgIf, FormsModule] // Adăugăm modulele necesare
+  imports: [NgIf, FormsModule, GeolocComponent] // Adăugăm modulele necesare
 })
 export class LoginComponent {
   email = '';
@@ -19,6 +21,7 @@ export class LoginComponent {
   errorMessage = '';
   successMessage = '';
   isLoading = false;
+  userLocation: string = '';
 
   constructor(private authService: AuthService,  private router: Router) {}
 
@@ -40,6 +43,10 @@ export class LoginComponent {
         this.isLoading = false;
       }
     });
+  }
+  onLocationSaved(location: string) {
+    this.userLocation = location;
+    console.log("📍 Location received in login:", location);
   }
   clearMessages() {
     this.errorMessage = '';

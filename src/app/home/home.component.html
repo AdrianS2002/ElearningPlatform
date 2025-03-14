@@ -15,7 +15,6 @@
         <button class="login" (click)="navigateToLogin()">Login Now</button>
     </div>
 
-    <!-- ✅ Professor Message -->
     <div *ngIf="isProfessor" class="professor-message">
         <h2>Welcome, Professor!</h2>
         <div class="msg-format">
@@ -25,11 +24,12 @@
         <button class="new-course" (click)="navigateToCreateCourse()">Create a New Course</button>
     </div>
     <div *ngIf="isStudent" class="student-motivation">
-        <h2>Your Enrolled Courses </h2> <img src="stack-of-books.png" alt="Books">
+        <h2>Your Enrolled Courses <img src="stack-of-books.png" alt="Books"></h2>
+        <h2 class="price">Total Price: {{price}} $</h2>
     </div>
     <div *ngIf="isStudent" class="student-message">
 
-        <!-- ✅ Enrolled Courses Section -->
+
         <div *ngIf="enrolledCourses.length > 0" class="enrolled-courses">
             <div class="enrolled-courses-container">
                 <ul class="enrolled-courses">
@@ -42,8 +42,17 @@
             </div>
 
         </div>
-        <button class="btn btn-primary" (click)="navigateToCourses()">Browse More Courses</button>
-        <!-- ✅ No Courses Enrolled -->
+        <div class="footer">
+            <button class="btn btn-primary" (click)="navigateToCourses()">Browse More Courses</button>
+            <img src="robot.png" alt="Robot" class="robot" (click)="toggleChatbot()">
+        </div>
+        
+
+        <div class="chatbot-popup" [ngClass]="{ 'hidden': !isChatbotOpen }" *ngIf="isChatbotOpen">
+            <div class="chatbot-content">
+                <app-chat-bot></app-chat-bot>
+            </div>
+        </div>
         <div *ngIf="enrolledCourses.length === 0" class="no-courses">
             <div class="no-courses">
                 <img src="alert.png" alt="Alert">

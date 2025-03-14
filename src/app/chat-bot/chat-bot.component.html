@@ -1,0 +1,17 @@
+<div class="chat-container" *ngIf="isStudent; else notAuthorized">
+    <h2>AI Chatbot</h2>
+    <div class="chat-box">
+        <div *ngFor="let msg of messages" [class]="msg.sender === 'You' ? 'user-message' : 'ai-message'">
+            <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" [(ngModel)]="userMessage" placeholder="Type a message..." (keyup.enter)="sendMessage()">
+        <button (click)="sendMessage()" class="send">Send</button>
+    </div>
+</div>
+
+<ng-template #notAuthorized>
+    <p>You must be logged in as a student to access the chatbot.</p>
+</ng-template>

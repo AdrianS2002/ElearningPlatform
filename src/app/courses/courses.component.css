@@ -5,6 +5,9 @@
     padding: 10px;
     text-align: center;
 }
+h2{
+    color: var(--button1-bg);
+}
 
 .courseBox{
     margin-top: 15px;
@@ -15,6 +18,18 @@
     border-radius: 20px;
     padding: 15px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+/* ✅ Stil pentru cursurile care nu mai au locuri disponibile */
+.disabled-course {
+    opacity: 0.6; /* Le facem mai puțin vizibile */
+    pointer-events: none; /* Dezactivează click-ul */
+    background-color: #ccc; /* Schimbă culoarea */
+}
+
+/* ✅ Dezactivare buton Enroll */
+.enroll:disabled {
+    background-color: gray;
+    cursor: not-allowed;
 }
 
 .course-card {
@@ -47,10 +62,29 @@
 .unenroll{
     background-color: red;
     color: white;
+    cursor: pointer;
 }
 .unenroll:hover{
     background-color: rgb(74, 1, 1);
     cursor: pointer;
+}
+/* ✅ Asigură-te că nu este afectat de stilurile globale */
+.disabled-course .unenroll {
+    pointer-events: auto !important; 
+    background-color: red;
+    opacity: 1 !important; /* ✅ Evită transparența */
+}
+.old-price {
+    text-decoration: line-through;
+    color: red;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.new-price {
+    color: green;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 .filter{
     color: white;
@@ -102,6 +136,26 @@
 .special-card:hover {
     box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.3);
 }
+
+.filter-container {
+    position: sticky;
+    top: 0;
+    background: transparent;
+    text-align: center;
+    padding: 10px;
+    z-index: 10;
+}
+
+
+.no-courses {
+    text-align: center;
+    height: 60vh;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-top: 20px;
+    font-weight: bold;
+}
+
 
 .special-card h3 {
     font-size: 20px;

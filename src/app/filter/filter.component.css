@@ -2,16 +2,16 @@
     margin-bottom: 15px;
 }
 
-/* ✅ Stil pentru a aranja checkbox-urile în două coloane */
+
 .checkbox-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* ✅ Două coloane egale */
-    gap: 10px; /* ✅ Spațiere între elemente */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
     text-align: left;
     margin-top: 10px;
 }
 
-/* ✅ Stil pentru fiecare pereche de checkbox și etichetă */
+
 .checkbox-container div {
     display: flex;
     align-items: center;

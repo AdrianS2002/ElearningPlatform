@@ -1,10 +1,10 @@
+<app-geoloc (locationSaved)="onLocationSaved($event)"></app-geoloc>
 <div class="home-container">
     <div class="title">
         <h1>Welcome to Our E-Learning Platform!</h1>
     </div>
 
 
-    <!-- ✅ Guest Message -->
     <div *ngIf="!isAuthenticated" class="guest-message">
         <div class="msg-format">
             <img src="startup.png" alt="Startup">

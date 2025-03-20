@@ -10,6 +10,7 @@ import { FilterComponent } from './filter/filter.component';
 import { OffersComponent } from './courses/offers/offers.component';
 import { CourseDetailComponent } from './courses/course-detail/course-detail.component';
 import { ChatbotComponent } from './chat-bot/chat-bot.component';
+import { CourseStatsComponent } from './course-stats/course-stats.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -24,5 +25,6 @@ export const routes: Routes = [
     { path: 'filter', component: FilterComponent},
     { path: 'offers', component: OffersComponent},
     { path: 'course/:id', component: CourseDetailComponent },
-    { path: 'chatbot', component: ChatbotComponent }
+    { path: 'chatbot', component: ChatbotComponent },
+    { path: 'course-stats/:id', component: CourseStatsComponent}
 ];

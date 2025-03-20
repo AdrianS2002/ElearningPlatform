@@ -13,7 +13,7 @@
         </div>
         }
         <div *ngIf="course" class="courseBox">
-            <!-- ✅ Aplică clasa dacă nu mai sunt locuri disponibile -->
+            
             <div class="course-card" [class.disabled-course]="course.available_slots === 0">
                 <div class="course-header">
                     <h3>{{ course.name }}</h3>
@@ -45,13 +45,13 @@
                 </div>
         
                 <div class="course-actions" *ngIf="isAuthenticated">
-                    <!-- ✅ Butonul Enroll devine dezactivat dacă nu mai sunt locuri -->
+                    
                     <button *ngIf="isStudent" (click)="enroll(course._id)" class="enroll" 
                             [disabled]="course.available_slots === 0">
                         Enroll
                     </button>
         
-                    <!-- ✅ Butonul Unenroll rămâne activ mereu -->
+                  
                     <button *ngIf="isStudent" (click)="unenroll(course._id)" class="unenroll">
                         Unenroll
                     </button>

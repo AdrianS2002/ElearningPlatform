@@ -15,7 +15,7 @@
 
         <a (click)="navigateToContact()" class="nav-item">Contact</a>
 
-        <!-- ✅ Bara de căutare cu dropdown -->
+      
         <div class="search-container">
             <input type="text" 
                    class="search-input" 
@@ -25,7 +25,7 @@
                    (focus)="showDropdown = true"
                    (blur)="hideDropdownWithDelay()">
 
-            <!-- ✅ Dropdown pentru sugestii -->
+          
             <div class="search-dropdown" *ngIf="showDropdown && filteredCourses.length > 0">
                 <ul>
                     <li *ngFor="let course of filteredCourses" 

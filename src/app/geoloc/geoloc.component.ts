@@ -33,26 +33,26 @@ export class GeolocComponent {
           const { latitude, longitude } = position.coords;
           const locationData = `${latitude},${longitude}`;
 
-          // ✅ Salvăm locația în cookies pentru 7 zile
+       
           document.cookie = `userLocation=${locationData}; max-age=${7 * 24 * 60 * 60}; path=/`;
 
-          this.showGeoPopup = false; // ✅ Ascundem popup-ul
-          this.locationSaved.emit(locationData); // ✅ Informăm componenta părinte
-          console.log("📍 Location saved:", locationData);
+          this.showGeoPopup = false; 
+          this.locationSaved.emit(locationData); 
+          console.log(" Location saved:", locationData);
         },
         error => {
-          console.error("❌ Error getting location:", error);
+          console.error(" Error getting location:", error);
           this.showGeoPopup = false;
         }
       );
     } else {
-      console.error("❌ Geolocation is not supported.");
+      console.error(" Geolocation is not supported.");
       this.showGeoPopup = false;
     }
   }
 
   denyLocation() {
     this.showGeoPopup = false;
-    console.log("❌ User denied location access.");
+    console.log(" User denied location access.");
   }
 }

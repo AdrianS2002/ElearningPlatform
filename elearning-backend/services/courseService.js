@@ -37,21 +37,21 @@ class CourseService {
     
         const professor = await userRepository.findById(userId);
         if (!professor || professor.role !== "PROFESOR") {
-            console.log("❌ Unauthorized: Only professors can edit courses.");
+            console.log(" Unauthorized: Only professors can edit courses.");
             throw new Error("Only professors can edit courses!");
         }
     
         const course = await courseRepository.findById(id);
         if (!course) {
-            console.log("❌ Course not found.");
+            console.log(" Course not found.");
             throw new Error("Course not found!");
         }
     
-        console.log(`✅ Course found: ${course.name} | Owned by: ${course.user_id}`);
+        console.log(`Course found: ${course.name} | Owned by: ${course.user_id}`);
         console.log(`🔹 Comparing owner (${course.user_id.toString()}) with requester (${userId})`);
     
         if (course.user_id._id.toString() !== userId.toString()) {
-            console.log(`❌ Unauthorized: Course owner is ${course.user_id}, but request came from ${userId}`);
+            console.log(` Unauthorized: Course owner is ${course.user_id}, but request came from ${userId}`);
             throw new Error("You can only edit your own courses!");
         }
 
@@ -60,7 +60,7 @@ class CourseService {
             courseData.available_slots = course.available_slots + difference;
         }
     
-        console.log("✅ Course update authorized. Proceeding...");
+        console.log(" Course update authorized. Proceeding...");
         return await courseRepository.update(id, courseData);
     }
     

@@ -1,7 +1,7 @@
-/* ✅ Container general formular */
+
 .form-container {
     max-width: 90%;
-    width: 400px;  /* ✅ Se ajustează pe ecrane mici */
+    width: 400px;  
     background-color: var(--secondary-bg);
     padding: 15px;
     border-radius: 10px;
@@ -9,7 +9,7 @@
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ Titlu formular */
+
 .form-container h2 {
     color: white;
     text-align: center;
@@ -17,7 +17,7 @@
     margin-bottom: 10px;
 }
 
-/* ✅ Grupare etichete + input */
+
 .form-group {
     margin-bottom: 10px;
 }
@@ -41,7 +41,7 @@ label{
     font-size: 14px;
 }
 
-/* ✅ Layout pe două coloane */
+
 .form-group-inline {
     display: flex;
     gap: 10px;
@@ -51,12 +51,12 @@ label{
     flex: 1;
 }
 
-/* ✅ Stil pentru butoane */
+
 .form-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
-    flex-wrap: wrap;  /* ✅ Pe ecrane mici butoanele nu se vor suprapune */
+    flex-wrap: wrap;  
 }
 
 .btn {

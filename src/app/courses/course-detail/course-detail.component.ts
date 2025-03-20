@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../../services/course.service';
-import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { NgFor, NgIf } from '@angular/common';
-
 
 @Component({
   selector: 'app-course-detail',
@@ -12,7 +10,6 @@ import { NgFor, NgIf } from '@angular/common';
   standalone: true,
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.css',
-  
 })
 export class CourseDetailComponent implements OnInit {
   course: any;
@@ -32,75 +29,72 @@ export class CourseDetailComponent implements OnInit {
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('id');
 
-    // ✅ Verificăm autentificarea și rolul utilizatorului
-    this.isAuthenticated = !!this.userService.getUserId();
-    const role = this.userService.getUserRole();
+   
+    this.userService.isAuthenticated().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
 
-    if (role === 'STUDENT') {
-      this.isStudent = true;
-    } else if (role === 'PROFESOR') {
-      this.isProfessor = true;
-    }
+  
+    this.userService.getUserRole().subscribe((role) => {
+      this.isProfessor = role === 'PROFESOR';
+      this.isStudent = role === 'STUDENT';
+    });
 
-    // ✅ Obține detaliile cursului
+    
     if (courseId) {
-      this.courseService.getCourseById(courseId).subscribe((course) => {
-        this.course = course;
-      });
+      this.loadCourse(courseId);
     }
-  }
-  showSuccessMessage(message: string) {
-    this.successMessage = message;
-    setTimeout(() => this.successMessage = '', 3000); // ✅ Mesajul dispare după 3 secunde
   }
 
-  showErrorMessage(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => this.errorMessage = '', 3000);
-  }
-  loadCourse() {
-    const courseId = this.route.snapshot.paramMap.get('id');
-    if(courseId)
-    {
-      this.courseService.getCourseById(courseId).subscribe((course)=>{this.course = course;});
-    }
-  }
-  enroll(courseId: string) {
-    const studentId = this.userService.getUserId();
-    if (!studentId) {
-      this.showErrorMessage('Please log in to enroll in a course.');
-      return;
-    }
-    this.courseService.enrollStudent(courseId, studentId).subscribe({
-      next: () => {
-          this.showSuccessMessage('Enrollment successful!');
-          this.loadCourse(); // ✅ Reîncărcăm lista cursurilor pentru a actualiza available_slots
+  loadCourse(courseId: string) {
+    this.courseService.getCourseById(courseId).subscribe({
+      next: (course) => {
+        this.course = course;
       },
-      error: (err) => {
-        console.error('Enrollment error:', err); // ✅ Log pentru debugging
-        const errorMessage = err.error?.message || 'An error occurred during enrollment.';
-        this.showErrorMessage(errorMessage); // ✅ Afișează mesajul corect
-    },
-  });
+      error: (err) => console.error('Error loading course:', err),
+    });
+  }
+
+  enroll(courseId: string) {
+    this.userService.getUserId().subscribe((studentId) => {
+      if (!studentId) {
+        this.showErrorMessage('Please log in to enroll in a course.');
+        return;
+      }
+
+      this.courseService.enrollStudent(courseId, studentId).subscribe({
+        next: () => {
+          this.showSuccessMessage('Enrollment successful!');
+          this.loadCourse(courseId); 
+        },
+        error: (err) => {
+          console.error('Enrollment error:', err);
+          const errorMessage = err.error?.message || 'An error occurred during enrollment.';
+          this.showErrorMessage(errorMessage);
+        },
+      });
+    });
   }
 
   unenroll(courseId: string) {
-    const studentId = this.userService.getUserId();
-    if (!studentId) {
-      this.showErrorMessage('Please log in to unenroll from a course.');
-      return;
-    }
-    this.courseService.unenrollStudent(courseId, studentId).subscribe({
-      next: () => {
+    this.userService.getUserId().subscribe((studentId) => {
+      if (!studentId) {
+        this.showErrorMessage('Please log in to unenroll from a course.');
+        return;
+      }
+
+      this.courseService.unenrollStudent(courseId, studentId).subscribe({
+        next: () => {
           this.showSuccessMessage('Unenrollment successful!');
-          this.loadCourse(); // ✅ Reîncărcăm lista cursurilor
-      },
-      error: (err) => {
-        console.error('Enrollment error:', err); // ✅ Log pentru debugging
-        const errorMessage = err.error?.message || 'An error occurred during enrollment.';
-        this.showErrorMessage(errorMessage); // ✅ Afișează mesajul corect
-    },
-  });
+          this.loadCourse(courseId); 
+        },
+        error: (err) => {
+          console.error('Unenrollment error:', err);
+          const errorMessage = err.error?.message || 'An error occurred during unenrollment.';
+          this.showErrorMessage(errorMessage);
+        },
+      });
+    });
   }
 
   editCourse(courseId: string) {
@@ -127,5 +121,15 @@ export class CourseDetailComponent implements OnInit {
       return;
     }
     this.router.navigate(['/course-stats', courseId]);
+  }
+
+  showSuccessMessage(message: string) {
+    this.successMessage = message;
+    setTimeout(() => (this.successMessage = ''), 3000);
+  }
+
+  showErrorMessage(message: string) {
+    this.errorMessage = message;
+    setTimeout(() => (this.errorMessage = ''), 3000);
   }
 }

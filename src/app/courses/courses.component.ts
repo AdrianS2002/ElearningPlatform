@@ -32,27 +32,37 @@ export class CoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
-    this.isAuthenticated = this.userService.isAuthenticated();
-    this.isProfessor = this.isAuthenticated && this.userService.getUserRole() === 'PROFESOR';
-    this.isStundent = this.isAuthenticated && this.userService.getUserRole() === 'STUDENT';
-    this.userId = this.userService.getUserId(); 
+
+    this.userService.isAuthenticated().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
+
+    this.userService.getUserRole().subscribe((role) => {
+      this.isProfessor = role === 'PROFESOR';
+      this.isStundent = role === 'STUDENT';
+    });
+
+    this.userService.getUserId().subscribe((userId) => {
+      this.userId = userId;
+    });
   }
+
 
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: (data) => {
         this.allCourses = data.map((course: { start_date: string; end_date: string }) => ({
           ...course,
-          start_date: this.formatDate(course.start_date), // ✅ Conversie corectă
+          start_date: this.formatDate(course.start_date), 
           end_date: this.formatDate(course.end_date)
         }));
-        this.courses = [...this.allCourses]; // ✅ Inițial, afișăm toate cursurile
+        this.courses = [...this.allCourses]; 
       },
       error: (err) => console.error(err),
     });
   }
-  
-  
+
+
 
   addCourse() {
     this.router.navigate(['/add-course']);
@@ -73,44 +83,52 @@ export class CoursesComponent implements OnInit {
   }
 
   enroll(courseId: string) {
-    const studentId = this.userService.getUserId();
-    if (!studentId) {
-      this.showErrorMessage('Please log in to enroll in a course.');
-      return;
-    }
-    this.courseService.enrollStudent(courseId, studentId).subscribe({
-      next: () => {
+    console.log(" Enrolling in course:", courseId);
+    console.log(" User ID:", this.userId);
+    this.userService.getUserId().subscribe((studentId) => {
+      if (!studentId) {
+        this.showErrorMessage('Please log in to enroll in a course.');
+        return;
+      }
+
+      this.courseService.enrollStudent(courseId, studentId).subscribe({
+        next: () => {
           this.showSuccessMessage('Enrollment successful!');
-          this.loadCourses(); // ✅ Reîncărcăm lista cursurilor pentru a actualiza available_slots
-      },
-      error: (err) => {
-        console.error('Enrollment error:', err); // ✅ Log pentru debugging
-        const errorMessage = err.error?.message || 'An error occurred during enrollment.';
-        this.showErrorMessage(errorMessage); // ✅ Afișează mesajul corect
-    },
-  });
+          this.loadCourses(); 
+        },
+        error: (err) => {
+          console.error('Enrollment error:', err);
+          const errorMessage = err.error?.message || 'An error occurred during enrollment.';
+          this.showErrorMessage(errorMessage);
+        },
+      });
+    });
   }
+
   toggleFilterPopup() {
     this.showFilter = !this.showFilter;
   }
   unenroll(courseId: string) {
-    const studentId = this.userService.getUserId();
-    if (!studentId) {
-      this.showErrorMessage('Please log in to unenroll from a course.');
-      return;
-    }
-    this.courseService.unenrollStudent(courseId, studentId).subscribe({
-      next: () => {
+    this.userService.getUserId().subscribe((studentId) => {
+      if (!studentId) {
+        this.showErrorMessage('Please log in to unenroll from a course.');
+        return;
+      }
+
+      this.courseService.unenrollStudent(courseId, studentId).subscribe({
+        next: () => {
           this.showSuccessMessage('Unenrollment successful!');
-          this.loadCourses(); // ✅ Reîncărcăm lista cursurilor
-      },
-      error: (err) => {
-        console.error('Enrollment error:', err); // ✅ Log pentru debugging
-        const errorMessage = err.error?.message || 'An error occurred during enrollment.';
-        this.showErrorMessage(errorMessage); // ✅ Afișează mesajul corect
-    },
-  });
+          this.loadCourses();
+        },
+        error: (err) => {
+          console.error('Unenrollment error:', err);
+          const errorMessage = err.error?.message || 'An error occurred during unenrollment.';
+          this.showErrorMessage(errorMessage);
+        },
+      });
+    });
   }
+
 
   goToLogin() {
     this.router.navigate(['/login']);
@@ -118,7 +136,7 @@ export class CoursesComponent implements OnInit {
 
   showSuccessMessage(message: string) {
     this.successMessage = message;
-    setTimeout(() => this.successMessage = '', 3000); // ✅ Mesajul dispare după 3 secunde
+    setTimeout(() => this.successMessage = '', 3000); 
   }
 
   showErrorMessage(message: string) {
@@ -127,42 +145,42 @@ export class CoursesComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return ''; // Dacă nu există dată, returnăm un string gol
-    
+    if (!dateString) return ''; 
+
     const date = new Date(dateString);
-    const mm = ('0' + (date.getMonth() + 1)).slice(-2); // Luna (01-12)
-    const dd = ('0' + date.getDate()).slice(-2); // Ziua (01-31)
-    const yyyy = date.getFullYear(); // Anul (2024)
-  
-    return `${mm}.${dd}.${yyyy}`; // Returnăm formatul corect MM.DD.YYYY
+    const mm = ('0' + (date.getMonth() + 1)).slice(-2); 
+    const dd = ('0' + date.getDate()).slice(-2); 
+    const yyyy = date.getFullYear(); 
+
+    return `${mm}.${dd}.${yyyy}`; 
   }
-  
+
   applyCourseFilter(filterData: { domains: string[], startDate: string, endDate: string }) {
     this.courseService.getCourses().subscribe({
       next: (courses: any[]) => {
         this.courses = courses.filter(course => {
           const matchesDomain = filterData.domains.length === 0 || filterData.domains.includes(course.domain);
-  
-          // ✅ Convertim datele cursului din format ISO în MM.DD.YYYY
+
+          
           const formattedCourseStart = this.formatDate(course.start_date);
           const formattedCourseEnd = this.formatDate(course.end_date);
-  
-          // ✅ Convertim și datele filtrului în același format
+
+          
           const formattedStartDate = filterData.startDate ? this.formatDate(filterData.startDate) : '';
           const formattedEndDate = filterData.endDate ? this.formatDate(filterData.endDate) : '';
-  
-          // ✅ Comparăm datele corect
+
+          
           const startMatches = !formattedStartDate || formattedCourseStart >= formattedStartDate;
           const endMatches = !formattedEndDate || formattedCourseEnd <= formattedEndDate;
-  
+
           return matchesDomain && startMatches && endMatches;
         });
       },
       error: (err) => console.error('Error filtering courses:', err),
     });
   }
-  
-  
-  
-  
+
+
+
+
 }

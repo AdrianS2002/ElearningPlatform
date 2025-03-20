@@ -52,23 +52,22 @@
 
 
     <div *ngIf="isAuthenticated" class="courseBox">
-        <!-- ✅ Secțiunea fixată cu butonul de Filter -->
+      
         <div class="filter-container">
             <button *ngIf="isStundent" (click)="toggleFilterPopup()" class="filter">Filter</button>
         </div>
 
-        <!-- ✅ Popup-ul pentru filtrare -->
+       
         <div *ngIf="showFilter" class="filter-overlay">
             <app-filter (applyFilter)="applyCourseFilter($event)" (close)="showFilter = false"></app-filter>
         </div>
 
-        <!-- ✅ Afișează mesaj dacă nu există cursuri după filtrare -->
         <div *ngIf="courses.length === 0" class="no-courses">
             <p>No courses found.</p>
         </div>
 
-        <!-- ✅ Afișăm cursurile dacă există -->
-        <div *ngFor="let course of courses" class="course-card" [class.disabled-course]="course.available_slots === 0">
+       
+        <div *ngFor="let course of courses" class="course-card">
 
             <div class="course-header">
                 <h3>{{ course.name }}</h3>

@@ -9,26 +9,37 @@ h2{
     color: var(--button1-bg);
 }
 
+.enroll:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.enroll:disabled:hover {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+
 .courseBox{
     margin-top: 15px;
     max-width: 100vh;
     height: 70vh; 
-    overflow-y: auto; /* ✅ Permite scroll pe verticală */
+    overflow-y: auto; 
     background-color: rgba(165, 107, 231, 0.267);
     border-radius: 20px;
     padding: 15px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 }
-/* ✅ Stilizare cursuri fără locuri disponibile */
+
 .disabled-course {
-    opacity: 0.6; /* Face cursurile indisponibile mai puțin vizibile */
-    pointer-events: none; /* Dezactivează interacțiunea pe toată cartea cursului */
+    opacity: 0.6; 
+    pointer-events: none; 
 }
 
-/* ✅ Permite utilizatorului să apese pe butonul "Unenroll" */
+
 .disabled-course .unenroll {
-    pointer-events: auto !important; /* ✅ Permite click pe Unenroll */
-    opacity: 1 !important; /* ✅ Evită transparența */
+    pointer-events: auto !important; 
+    opacity: 1 !important; 
 }
 
 .course-card {
@@ -39,7 +50,7 @@ h2{
     margin-top: 30px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
     display: grid;
-    grid-template-columns: 3fr 3fr 1fr; /* First two columns for info, third for buttons */
+    grid-template-columns: 3fr 3fr 1fr; 
     align-items: center;
     justify-content: space-between;
     gap: 20px;
@@ -91,7 +102,7 @@ h2{
     cursor: pointer;
 }
 .course-header {
-    grid-column: span 3; /* Title spans all three columns */
+    grid-column: span 3; 
     color: white;
     font-weight: bold;
     text-align: left;
@@ -109,7 +120,7 @@ h2{
     width: 100%;
 }
 
-/* ✅ Modificăm special-card să nu mai fie pe 3 coloane */
+
 .special-card {
     background-color: var(--secondary-bg);
     border-radius: 10px;
@@ -119,7 +130,7 @@ h2{
     margin-top: 30px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* First two columns for info, third for buttons */
+    grid-template-columns: repeat(3, 1fr); 
     align-items: center;
     justify-content: space-between;
     gap: 20px;
@@ -162,7 +173,7 @@ h2{
 
 .course-info {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Two equal columns */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 150px;
     font-size: 14px;
     color: white;
@@ -174,7 +185,7 @@ h2{
     display: flex;
     flex-direction: column;
     gap: 8px;
-    justify-self: end; /* Align buttons to the right */
+    justify-self: end; 
     align-items: flex-end;
 }
 

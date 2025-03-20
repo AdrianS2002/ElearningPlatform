@@ -7,14 +7,34 @@ const courseRoutes = require("./routes/courseRoutes");
 const usersCourseRoutes = require("./routes/usersCourseRoutes");
 const enrollRoutes = require("./routes/enrollRoutes");
 const cors = require("cors");
-const { GoogleGenerativeAI } = require("@google/generative-ai"); // ✅ Folosim SDK-ul oficial
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const { GoogleGenerativeAI } = require("@google/generative-ai"); 
 
 const app = express();
 app.use(express.json());
 app.use(cors({
     origin: "http://localhost:4200",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization"
+    allowedHeaders: "Content-Type,Authorization",
+    credentials: true
+}));
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || "securitate_puternica",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: "sessions"
+    }),
+    cookie: {
+        secure: false,
+        httpOnly: true, 
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24 
+    }
 }));
 
 connectDB();
@@ -45,7 +65,7 @@ app.post("/api/chatbot", async (req, res) => {
 
         console.log("🛠️ AI Raw Response:", response);
 
-        // ✅ FIX: Obține efectiv textul răspunsului
+       
         const reply = response.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I could not understand that.";
 
         console.log("🤖 AI Reply:", reply);
@@ -59,5 +79,3 @@ app.post("/api/chatbot", async (req, res) => {
         });
     }
 });
-
-

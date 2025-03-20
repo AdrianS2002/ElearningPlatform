@@ -3,6 +3,7 @@ import { ChatbotService } from '../services/chatbot.service';
 import { UserService } from '../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-chat-bot',
@@ -16,25 +17,26 @@ export class ChatbotComponent implements OnInit {
   userMessage: string = '';
   isStudent: boolean = false;
 
-  constructor(private chatbotService: ChatbotService, private userService: UserService) {}
+  constructor(private chatbotService: ChatbotService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const role = this.userService.getUserRole();
-    this.isStudent = role === 'STUDENT';
+    this.authService.getUserRole().subscribe(role => {
+      this.isStudent = role === 'STUDENT'; 
+    });
   }
 
   sendMessage() {
     if (!this.userMessage.trim()) return;
   
-    this.messages.push({ sender: "You", text: this.userMessage }); // Afișează mesajul utilizatorului
+    this.messages.push({ sender: "You", text: this.userMessage });
     const messageToSend = this.userMessage;
     this.userMessage = ""; // Curăță inputul
   
     this.chatbotService.sendMessage(messageToSend).subscribe({
       next: (response) => {
-        console.log("🛠️ AI Response in Frontend:", response); // ✅ Debugging
+        console.log("🛠️ AI Response in Frontend:", response); 
         if (response && response.reply) {
-          this.messages.push({ sender: "AI", text: response.reply }); // ✅ Adaugă mesajul AI
+          this.messages.push({ sender: "AI", text: response.reply }); 
         } else {
           this.messages.push({ sender: "AI", text: "Sorry, I could not understand that." });
         }

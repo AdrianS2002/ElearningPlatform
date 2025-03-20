@@ -1,11 +1,11 @@
-/* ✅ Container general pentru chat */
+
 .chat-container, .chatbot-popup {
     position: fixed;
     bottom: 10%;
     right: 10%;
     width: 450px;
     height: 600px;
-    background: rgba(55, 60, 79, 0.95); /* ✅ Fundal semitransparent */
+    background: rgba(55, 60, 79, 0.95); 
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 20px;
@@ -18,20 +18,20 @@
     justify-content: space-between;
 }
 
-/* ✅ Animare la deschidere */
+/*  Animare la deschidere */
 .chat-container.hidden, .chatbot-popup.hidden {
     transform: scale(0.95);
     opacity: 0;
 }
 
-/* ✅ Titlu chatbot */
+/* Titlu chatbot */
 .chat-container h2 {
     text-align: center;
     color: white;
     margin-bottom: 10px;
 }
 
-/* ✅ Zona de mesaje */
+
 .chat-box {
     flex: 1;
     overflow-y: auto;
@@ -41,7 +41,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ✅ Mesaj trimis de utilizator */
+
 .user-message {
     color: white;
     padding: 10px;
@@ -50,7 +50,7 @@
     text-align: right;
 }
 
-/* ✅ Mesaj răspuns AI */
+
 .ai-message {
     background: #555;
     color: white;
@@ -63,7 +63,7 @@ button{
     background-color: var(--button1-bg);
 }
 
-/* ✅ Input și buton de trimitere */
+
 .chat-input {
     display: flex;
     margin-top: 10px;
@@ -90,7 +90,6 @@ button{
     background: var(--button1-hover-bg);
 }
 
-/* ✅ Stilizare buton închidere */
 .close-btn {
     position: absolute;
     top: 10px;

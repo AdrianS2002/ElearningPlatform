@@ -1,52 +1,72 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/auth'; // URL-ul backend-ului
-
+  private apiUrl = 'http://localhost:5000/auth';
   private http = inject(HttpClient);
 
-  // Obține token-ul salvat în localStorage
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+  private authStatus = new BehaviorSubject<boolean>(false);
+  authStatus$ = this.authStatus.asObservable();
+
+  private userRole = new BehaviorSubject<string | null>(null);
+  userRole$ = this.userRole.asObservable();
+
+  constructor() {
+    this.checkSession().subscribe({
+      next: (response: any) => { // ✅ Verificăm structura răspunsului
+        console.log("✅ Sesiune activă:", response);
+        const user = response.user; // ✅ Extragem utilizatorul
+        if (user) {
+          this.authStatus.next(true);
+          this.userRole.next(user.role); // 🔥 Stocăm rolul utilizatorului
+        }
+      },
+      error: () => {
+        console.log("❌ Nicio sesiune activă.");
+        this.authStatus.next(false);
+      }
     });
   }
 
-  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
-  authStatus$ = this.authStatus.asObservable(); // Observable pentru componente
-
-
-  // Metodă pentru Signup
   signup(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, userData, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/signup`, userData, { withCredentials: true });
   }
 
-  // Metodă pentru Login
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/login`, credentials, { withCredentials: true }).pipe(
+      tap((response: any) => { // ✅ Extragem utilizatorul din răspuns
+        console.log("🔹 Login Response:", response);
+        const user = response.user;
+        if (user) {
+          this.authStatus.next(true);
+          this.userRole.next(user.role); // ✅ Setăm rolul
+        }
+      })
+    );
   }
 
-  // Metodă pentru Logout
-  logout(): void {
-    localStorage.removeItem('token'); // Șterge token-ul din localStorage
-    localStorage.removeItem('role');  // Șterge rolul utilizatorului (dacă este salvat)
-    this.setAuthStatus(false); // Emite schimbarea de stare (utilizator delogat)
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        this.authStatus.next(false);
+        this.userRole.next(null);
+      })
+    );
   }
 
-  // Metodă pentru verificarea autentificării
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token'); // Dacă există un token, utilizatorul este logat
+  checkSession(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/session`, { withCredentials: true });
   }
 
-  // Metodă pentru setarea autentificării după login
-  setAuthStatus(isAuthenticated: boolean) {
-    this.authStatus.next(isAuthenticated); // Emite schimbarea de stare (utilizator logat)
+  getUserRole(): Observable<string | null> {
+    return this.userRole$.pipe();
+  }
+
+  isAuthenticated(): Observable<boolean> {
+    return this.authStatus$;
   }
 }

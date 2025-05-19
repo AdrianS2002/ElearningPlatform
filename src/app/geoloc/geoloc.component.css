@@ -1,0 +1,53 @@
+.geo-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--input-bg);
+    padding: var(--padding-lg);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+    width: 350px;
+    max-width: 90%;
+    color: var(--input-text);
+}
+
+.geo-content h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--secondary-text-color);
+    margin-bottom: 10px;
+}
+
+.geo-content p {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 20px;
+}
+
+.geo-popup button {
+    padding: var(--padding-md);
+    width: 45%;
+    font-weight: bold;
+    border-radius: var(--border-radius);
+}
+
+.geo-popup .btn-success {
+    background-color: var(--button1-bg);
+    color: var(--text-color);
+}
+
+.geo-popup .btn-success:hover {
+    background-color: var(--button1-hover-bg);
+}
+
+.geo-popup .btn-danger {
+    background-color: var(--input-text);
+    color: var(--text-color);
+}
+
+.geo-popup .btn-danger:hover {
+    background-color: var(--secondary-bg);
+}

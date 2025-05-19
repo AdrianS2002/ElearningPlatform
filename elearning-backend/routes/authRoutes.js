@@ -3,11 +3,14 @@ const authService = require("../services/authService");
 
 const router = express.Router();
 
-// Ruta pentru SIGNUP (înregistrare)
 router.post("/signup", async (req, res) => {
     try {
-        const { token, user } = await authService.signup(req.body);
-        res.status(201).json({ token, user });
+        const user = await authService.signup(req.body);
+
+       
+        req.session.user = { id: user._id, email: user.email, role: user.role };
+
+        res.status(201).json({ message: "Signup successful", user: req.session.user });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -17,27 +20,42 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const { token, user } = await authService.login(email, password);
-        res.json({ token, user });
+        const user = await authService.login(email, password);
+
+       
+        req.session.user = { id: user._id, email: user.email, role: user.role };
+
+        res.json({ message: "Login successful", user: req.session.user });
     } catch (error) {
         res.status(401).json({ error: error.message });
     }
 });
 
-// Logout route
+router.get("/session", (req, res) => {
+    if (req.session.user) {
+        res.json({ 
+            message: "Sesiune activă",
+            user: req.session.user, 
+            role: req.session.user.role
+        });
+    } else {
+        res.status(401).json({ error: "No active session" });
+    }
+});
+
 router.post("/logout", (req, res) => {
-    const token = req.headers.authorization?.split(" ")[1]; // Extrage token-ul din header-ul "Authorization"
-
-    if (!token) {
-        return res.status(400).json({ error: "Token is required for logout" });
+    if (!req.session.user) {
+        return res.status(400).json({ error: "User is not logged in" });
     }
 
-    try {
-        authService.logout(token);
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Logout error:", err);
+            return res.status(500).json({ error: "Logout failed" });
+        }
+        res.clearCookie("connect.sid"); 
         res.json({ message: "Logout successful" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    });
 });
 
 module.exports = router;

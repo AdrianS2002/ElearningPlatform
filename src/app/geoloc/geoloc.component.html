@@ -1,0 +1,8 @@
+<div *ngIf="showGeoPopup" class="geo-popup">
+    <div class="geo-content">
+        <h4>Allow Location Access?</h4>
+        <p>We need your location to enhance your experience.</p>
+        <button class="btn btn-success" (click)="getUserLocation()">Allow</button>
+        <button class="btn btn-danger" (click)="denyLocation()">Deny</button>
+    </div>
+</div>

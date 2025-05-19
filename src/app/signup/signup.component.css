@@ -76,3 +76,6 @@ label[for="role"] {
     margin-bottom: 0.5rem;
 }
 
+.alert-alert-success{
+    color: green;
+}

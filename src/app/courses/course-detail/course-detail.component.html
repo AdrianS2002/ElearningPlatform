@@ -1,0 +1,79 @@
+<div class="courses">
+    <h2>Course Details</h2>
+    @if(successMessage){
+        <div class="success-message">
+            {{ successMessage }}
+        </div>
+    
+        }
+    
+        @if(errorMessage){
+        <div class="error-message">
+            {{ errorMessage }}
+        </div>
+        }
+        <div *ngIf="course" class="courseBox">
+            
+            <div class="course-card" [class.disabled-course]="course.available_slots === 0">
+                <div class="course-header">
+                    <h3>{{ course.name }}</h3>
+                    <p>{{ course.description }}</p>
+                </div>
+                <div class="course-info">
+                    <div>
+                        <p><strong>Domain:</strong> {{ course.domain }}</p>
+                        <p><strong>Start Date:</strong> {{ course.start_date }}</p>
+                        <p><strong>End Date:</strong> {{ course.end_date }}</p>
+                    </div>
+                    <div>
+                        <p><strong>No. Lectures:</strong> {{ course.no_session }}</p>
+                        <p><strong>Slots:</strong> {{ course.slots }}</p>
+                        <p><strong>Available Slots:</strong> {{ course.available_slots }}</p>
+                    </div>
+                    <div>
+                        <p *ngIf="course.discount > 0">
+                            <strong>Price:</strong> 
+                            <span class="old-price">${{ course.price }}</span> 
+                            <span class="new-price">${{ (course.price * (1 - course.discount / 100)).toFixed(2) }}</span>
+                        </p>
+                        <p *ngIf="course.discount === 0">
+                            <strong>Price:</strong> ${{ course.price }}
+                        </p>
+                        <p><strong>Languages:</strong> {{ course.languages }}</p>
+                        <p><strong>Discount:</strong> {{ course.discount }}%</p>
+                    </div>
+                </div>
+        
+                <div class="course-actions" *ngIf="isAuthenticated">
+                    
+                    <button *ngIf="isStudent" (click)="enroll(course._id)" class="enroll" 
+                            [disabled]="course.available_slots === 0">
+                        Enroll
+                    </button>
+        
+                  
+                    <button *ngIf="isStudent" (click)="unenroll(course._id)" class="unenroll">
+                        Unenroll
+                    </button>
+        
+                    <button *ngIf="isProfessor" (click)="editCourse(course._id)" class="btn btn-primary">
+                        <img src="edit.png" alt="Edit" />
+                    </button>
+                    <button *ngIf="isProfessor" (click)="deleteCourse(course._id)" class="btn btn-danger">
+                        <img src="delete.png" alt="Delete" />
+                    </button>
+                    <button *ngIf="isProfessor" (click)="stats(course._id)" class="btn btn-secondary">
+                        <img src="stats.png" alt="Stats" />
+                    </button>
+                </div>
+        
+                <div *ngIf="!isAuthenticated" class="not-authenticated">
+                    <p>Please <a (click)="router.navigate(['/login'])">log in</a> to enroll or manage this course.</p>
+                </div>
+            </div>
+        </div>
+        
+    <div *ngIf="!course" class="no-courses">
+        <p>Course not found.</p>
+    </div>
+</div>

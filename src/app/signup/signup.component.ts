@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // 👈 Pentru redirecționare
+import { Router } from '@angular/router'; 
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -39,11 +39,11 @@ export class SignupComponent {
 
     this.authService.signup(userData).subscribe({
       next: () => {
-        this.successMessage = 'Signup successful! Redirecting to login...';
-        this.isLoading = false;
+        this.successMessage = 'Signup successful! Redirecting to home...';
         setTimeout(() => {
-          this.router.navigate(['/login']); // 👈 Redirecționează către Login după înregistrare
+          this.router.navigate(['/home']); // ✅ Redirecționează direct către home
         }, 2000);
+        this.isLoading = false;
       },
       error: (err) => {
         this.errorMessage = err.error.error || 'Signup failed!';
@@ -58,6 +58,6 @@ export class SignupComponent {
   }
 
   switchToLogin() {
-    this.router.navigate(['/login']); // 👈 Navighează către Login
+    this.router.navigate(['/login']);
   }
 }

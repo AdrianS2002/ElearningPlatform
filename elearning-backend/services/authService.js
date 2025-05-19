@@ -7,48 +7,42 @@ class AuthService {
     // LOGIN
     async login(email, password) {
         const user = await userRepository.findByEmail(email);
-        console.log("User found:", user);
-        console.log("Password entered:", password);
-        console.log("Stored password (hashed):", user.password);
+        if (!user) throw new Error("User not found. Please check your email or sign up.");
 
-        if (!user || !(await user.validPassword(password))) {
-            throw new Error("Invalid credentials");
+        if (!(await bcrypt.compare(password, user.password))) {
+            throw new Error("Incorrect password.");
         }
 
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-        return { token, user };
+        return user;
     }
 
-    // SIGNUP
     async signup(userData) {
         const existingUser = await userRepository.findByEmail(userData.email);
         if (existingUser) {
             throw new Error("Email already in use");
         }
 
-        // NU hash-uim parola aici, lăsăm `User.js` să facă hash-ul
-        const newUser = await userRepository.create(userData);
-
-        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-        return { token, user: newUser };
+       
+     //   userData.password = await bcrypt.hash(userData.password, 10);
+        return await userRepository.create(userData);
     }
 
-    // LOGOUT - Adaugă token-ul în blacklist
-    async logout(token) {
-        if (!token) {
-            throw new Error("Token is required for logout");
-        }
-        blacklistedTokens.add(token); // Stocăm token-ul invalidat
-        return { message: "Logout successful" };
-    }
+    async logout(req) {
+        return new Promise((resolve, reject) => {
+            if (!req.session.user) {
+                return reject(new Error("User is not logged in"));
+            }
 
-    // Verifică dacă un token este invalid
-    isTokenBlacklisted(token) {
-        return blacklistedTokens.has(token);
-    }
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error(" Error destroying session:", err);
+                    return reject(new Error("Logout failed"));
+                }
 
+                resolve({ message: "Logout successful" });
+            });
+        });
+    }
 }
 
 module.exports = new AuthService();

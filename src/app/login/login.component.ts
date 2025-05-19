@@ -31,6 +31,8 @@ export class LoginComponent {
         console.log("✅ Login response:", response);
         this.router.navigate(['/home']); // ✅ Navigăm către home
         this.successMessage = 'Login successful!';
+        sessionStorage.setItem('user', JSON.stringify(response.user));
+        console.log("User data saved in sessionStorage:", response.user);
         this.isLoading = false;
       },
       error: (err) => {

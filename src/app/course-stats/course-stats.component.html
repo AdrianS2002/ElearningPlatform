@@ -1,1 +1,41 @@
-<p>course-stats works!</p>
+<div class="course-stats-container">
+    <h2 class="text-xl font-bold mb-4">Statistici pentru {{ selectedCourse?.name }}</h2>
+  
+    <div class="month-select-container mb-4" *ngIf="availableMonths.length > 0">
+        <label for="month-select">Selectează luna:</label>
+        <select id="month-select" (change)="handleMonthChange($event)" class="custom-select">
+          <option *ngFor="let month of availableMonths" [value]="month.month + '-' + month.year">
+            {{ month.month + 1 }}/{{ month.year }}
+          </option>
+        </select>
+      </div>
+      
+  
+    <h3 class="text-lg font-semibold mb-4">Calendar de înscrieri</h3>
+    <div class="calendar">
+      <div *ngFor="let day of daysInMonth" [class.bg-green-300]="isDayMarked(day)">
+        {{ day }}
+      </div>
+    </div>
+  
+    <h3 class="text-lg font-semibold mt-8">Grafic înscrieri pe lună</h3>
+    <canvas #chartCanvas></canvas>
+
+    <h3 class="text-lg font-semibold mt-8">Studenți înrolați</h3>
+    <table class="min-w-full table-auto border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th class="border border-gray-300 px-4 py-2 text-center">Email</th>
+          <th class="border border-gray-300 px-4 py-2 text-center">Telefon</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of studentsEnrolled">
+          <td class="border border-gray-300 px-4 py-2">{{ student.email }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ student.tel }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+  

@@ -23,7 +23,7 @@ class AuthService {
         }
 
        
-        userData.password = await bcrypt.hash(userData.password, 10);
+     //   userData.password = await bcrypt.hash(userData.password, 10);
         return await userRepository.create(userData);
     }
 

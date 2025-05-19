@@ -12,7 +12,7 @@ export class CourseService {
   private userService = inject(UserService);
   constructor(private http: HttpClient ) {}
 
-  // ✅ Log request URL before making the request
+  //  Log request URL before making the request
   private logRequest(endpoint: string) {
     console.log(`🔹 Sending request to: ${this.apiUrl}/${endpoint}`);
   }
@@ -35,11 +35,11 @@ export class CourseService {
     return this.userService.getUserId().pipe(
       tap((userId) => {
         if (!userId) {
-          console.error("❌ User ID is missing. Cannot create course.");
+          console.error(" User ID is missing. Cannot create course.");
           throw new Error("User ID is required to create a course.");
         }
-        course.user_id = userId; // ✅ Adaugă user_id doar după extragere
-        console.log("📤 Sending Course Data with User ID:", course);
+        course.user_id = userId; //  Adaugă user_id doar după extragere
+        console.log(" Sending Course Data with User ID:", course);
       }),
       switchMap(() => this.http.post(this.apiUrl, course, { withCredentials: true }))
     );
@@ -49,11 +49,11 @@ export class CourseService {
     return this.userService.getSessionUser().pipe( // 🔹 Obține utilizatorul din sesiune
       switchMap((user) => {
         if (!user || !user.user || !user.user.id) { 
-          console.error("❌ User ID is missing. Cannot update course.");
+          console.error(" User ID is missing. Cannot update course.");
           return throwError(() => new Error("User ID is required to update a course."));
         }
-        course.user_id = user.user.id; // ✅ Folosește ID-ul din sesiune
-        console.log("📤 Updating Course Data with User ID:", course);
+        course.user_id = user.user.id; //  Folosește ID-ul din sesiune
+        console.log(" Updating Course Data with User ID:", course);
         return this.http.put(`${this.apiUrl}/${id}`, course, { withCredentials: true });
       })
     );
@@ -64,10 +64,10 @@ export class CourseService {
     return this.userService.getUserId().pipe(
       switchMap((userId) => {
         if (!userId) {
-          console.error("❌ User ID is missing. Cannot delete course.");
+          console.error(" User ID is missing. Cannot delete course.");
           return throwError(() => new Error("User ID is required to delete a course."));
         }
-        console.log(`🗑️ Deleting course: ${id} by User: ${userId}`);
+        console.log(` Deleting course: ${id} by User: ${userId}`);
         return this.http.delete(`${this.apiUrl}/${id}`, { withCredentials: true });
       })
     );
@@ -79,11 +79,11 @@ export class CourseService {
     return this.http.post(
       this.enrollmentsUrl,
       { courses_id: courseId, student_id: studentId },
-      { withCredentials: true } // ✅ Trimitere sesiune către backend
+      { withCredentials: true } //  Trimitere sesiune către backend
     ).pipe(
-      tap(response => console.log("✅ Enrollment Response:", response)),
+      tap(response => console.log(" Enrollment Response:", response)),
       catchError(error => {
-        console.error("❌ Enrollment Error:", error);
+        console.error(" Enrollment Error:", error);
         return throwError(() => new Error(error.error?.error || "Enrollment failed!"));
       })
     );
@@ -91,7 +91,7 @@ export class CourseService {
 
   unenrollStudent(courseId: string, studentId: string): Observable<any> {
     return this.http.delete(`${this.enrollmentsUrl}/${courseId}/${studentId}`, {
-      withCredentials: true // ✅ Trimitere sesiune
+      withCredentials: true // Trimitere sesiune
     });
   }
 }

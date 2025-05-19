@@ -47,8 +47,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   async loadUserLanguage() {
     try {
       const countryCode = await this.languageService.getUserCountry();
+      console.log("🌍 Țara utilizatorului:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", countryCode);
       if (countryCode) {
         const data = await this.languageService.getLanguageByCountry(countryCode);
+        console.log("🌍 Limba utilizatorului:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx", data);
         if (data && data.length > 0 && data[0].languages) {
           this.userLanguage = countryCode;
         } else {
